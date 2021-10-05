@@ -1,0 +1,11 @@
+select {
+    background-color: rgb(21, 24, 28);
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    height: 40px;
+    margin-left: auto;
+    padding-left: 15px;
+    width: 130px;
+}
+

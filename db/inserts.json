@@ -1,0 +1,43 @@
+[
+{
+	"id": "1",
+	"username": "Danniel",
+	"content": "Este es mi primer post con socket.io en mi página de App Engine!💻🤑\nDesde CosmosDB",
+	"upvoted": 1,
+	"upvotes_count": 15,
+	"downvoted": 0,
+	"downvotes_count": 0,
+	"hashtags": ["sopes1", "tweet", "azure"],
+	"fecha": "26/09/2021",
+	"avatar": "https://lh3.googleusercontent.com/pw/AM-JKLU19vwna9NHfhvxIk9rQSMXl_2Gu9f0U_y5pH_mH18vDHmD6uyyMtG5bKK6BnfB9cy8yKrAKsPOTUCg6Lb1uNLYmm7uXdS0asKXN4rCgF_Z1pvZpiu7fNW1GxjTia0PNlqJXC0OnzHRvySLrvWrw3Tc=s940-no"
+}
+,
+
+{
+	"id": "2",
+	"username": "Nat",
+	"content": "De graduarme tengo",
+	"upvoted": 1,
+	"upvotes_count": 15,
+	"downvoted": 0,
+	"downvotes_count": 0,
+	"hashtags": ["medicina", "usac"],
+	"fecha": "26/09/2021",
+	"avatar": "https://lh3.googleusercontent.com/pw/AM-JKLU19vwna9NHfhvxIk9rQSMXl_2Gu9f0U_y5pH_mH18vDHmD6uyyMtG5bKK6BnfB9cy8yKrAKsPOTUCg6Lb1uNLYmm7uXdS0asKXN4rCgF_Z1pvZpiu7fNW1GxjTia0PNlqJXC0OnzHRvySLrvWrw3Tc=s940-no"
+}
+
+,
+{
+	"id": "3",
+	"username": "Alejandro Giammatei",
+	"content": "Se antoja otro préstamo.",
+	"upvoted": 0,
+	"upvotes_count": 597,
+	"downvoted": 1,
+	"downvotes_count": 85,
+	"hashtags": ["JuntosSaldremosAdelante"],
+	"fecha": "05/10/2021",
+	"avatar": "https://pbs.twimg.com/profile_images/1350101221844127750/kdf4XmVr_400x400.jpg"
+}
+
+]

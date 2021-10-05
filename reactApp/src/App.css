@@ -1,0 +1,26 @@
+body {
+  --twitter-color: #154a7e;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+textarea {
+  background-color: rgb(21, 24, 28);
+  border-radius: 20px;
+  padding: 15px;
+  height: 88px;
+  resize: none;
+}
+
+input {
+  background-color: rgb(21, 24, 28) !important;
+  border-radius: 20px;
+  padding: 15px;
+  margin-left: 15px;
+}
