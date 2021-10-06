@@ -20,6 +20,31 @@ class Pie extends Component {
         return percents;
     }
 
+    checkTop(tmp, obj) {
+        for (let i = 0; i < tmp.length; i++) {
+            const element = tmp[i];
+            if (element.tag === obj.tag) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    getTop(array) {
+        let tmp = [];
+        for (let i = 0; i < array.length; i++) {
+            const obj = array[i];
+            let index = this.checkTop(tmp, obj);
+            if (index === -1)
+                tmp.push(obj)
+            else
+                tmp[index].counter += obj.counter;
+        }
+        tmp.sort((a, b) => (a.counter < b.counter) ? 1 : -1)
+        // console.log(tmp)
+        return tmp.slice(0, 5);
+    }
+
     getPoints(array, percents) {
         let points = [];
         for (let i = 0; i < array.length; i++) {
@@ -33,8 +58,9 @@ class Pie extends Component {
     }
 
     render() {
-        let percents = this.getPercent(this.props.top_five);
-        let points = this.getPoints(this.props.top_five, percents);
+        let top = this.getTop(this.props.top_five);
+        let percents = this.getPercent(top);
+        let points = this.getPoints(top, percents);
         const options = {
             theme: "dark1",
             backgroundColor: "#15181c",

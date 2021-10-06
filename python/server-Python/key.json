@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "erudite-justice-328103",
+  "private_key_id": "b399f282c7c1041ac9428ec77f66473cdcd85dbb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCgMV0EAaGyofkL\nphZELdMxRS8isUXUPHb5YXbjq1/UNw1Y7Hkl/EEndkIyhPlE//b8D+Sd1P8PWpBK\nm8Pak5/FqNv0boD2TkpGebm/Fkx782M6ZTmqGsxyAoqVCyLcv4LDFzcqQlgNWQwP\nEl626yNTSurBKRi1AY1ypHX+6fRw7ycaMTqc8Z8QuYNhoSB7Dy8UBHr734vniR4V\nkWvZoUm8NESwzynTaO/6LdWuc0QRshSNiNiwfUTo7jWdnkabuWmrtqV6nHJcxAaC\n/T5nODmBVFTHCTuVUn+iAv8x28PWnTXfPksh4d4eCtZusSXdOnnnkLO4rsLM1kok\nxFiL/0apAgMBAAECggEAAZVtEHgzTYXaPF4oJIS7rJ0KrmDs9bcr0JVhAAAaCODd\nPSYWDlBrq7FB1yyynmSjW2bom4A0+4n3L8HtARB+zr9Avm5VvjvrFtCrlOrzm4Pi\norKamb/4nEgCQfqincIuuNpIfiNDvI0LqGKPDdU3UFmCayqznL1/B0MaOOPr+e5V\nU0jMSy5jfCSC0UW8cIvA7JeV7xv2G4vDPrv7i1HI6TNElEvUjP5KB0pEnodZDnam\nC8GUCh9/dPN2ZuGBn0ma7itY7zzmg8ANZS8ezndrwwAttrD5UuEMVfSQL7YelFfi\n2g3BRMzpycaDZvD/HZpkanUiSy9erm3cLyguNEnpkQKBgQDaeWfoydbUWmLK2vJL\nctH4J+U4jOnWFEbr6bvPWQafFtaMyqZl/MItxh8Yp7yOF/akmfsMJySWlQF4r55m\ntvHb9qfpqMvWimQOe8feC93l+afJpbiEUshl5RzPF7Bf/DJUy0a6FFskbQ3PnjH3\nmXmrr37HtakfxJXNAi+0+ofCMQKBgQC7tT+ZDXJCL/HFMSBNTBD5LQQbKY1rdLGR\nOBIYXWS74bofHKhSK9Hhk6LZ3Ydee4DUU8zfW+oYMJRhv3m+2x15zPcZOxnWlc3N\nljaWLaQjD3gpj0RVlUvcyjJXBoowC1AGpRSoGIntyxaKTNmrAu4IJEfIw0QeNFci\njhWivaN1+QKBgGzMewe9xGN6I6q8AF+8bX40d/2Ch0zaSjtf6eynfBmr6OqyXM17\nY0QiXwgLOGZW3rg4CoKR17G5wMLWSn8Cak3Ndu9w5RoRTyS7Vdxpcnb9riZIhiw3\ngZ7ky0UCmg4i7Pm3RaCTVJQ+Tttu/5k7cBEk03EnMXMllihDB3kMLqFxAoGASioU\n1L4xVOFon0cHwkK5uhoFM045qClVN1F2JNZRxMItLbm+76iMppoUkAwtPjGB92Kc\n4euJFMGs/uoOilA81zEauIdXcCeERySAsNmbrpagHZuTnlT8wmHJfgUBeHYfymBT\nRw9a/+9sGny+zAi+T80156bvNRftDaQh/Ej9WtECgYB8BtsRzvq+JGfqFZX0iTgv\nZSOBy1FcblhXVt9cRrR71UI2VhaWFU3sZ4RiMXyHzoCLIG3Cys3Ozv2/+jR3HWX0\nHZTExFqO0tRKX7FDZ+fiD60W6aYN6rloFRzFJrwmv8xgex/QWL54s7SRNyE3tb1N\nAB6BgTtdoX6Z5smhc/8w7g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "erudite-justice-328103@appspot.gserviceaccount.com",
+  "client_id": "111166569612653169361",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/erudite-justice-328103%40appspot.gserviceaccount.com"
+}

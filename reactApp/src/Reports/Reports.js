@@ -19,11 +19,15 @@ class Reports extends Component {
             vs_downvotes: 0,
             top_five: [],
             db: "1",
-            fecha: this.getToday()
+            fecha: this.getToday(),
+            isLoaded: false
         }
     }
 
     getData(_db = this.state.db, _fecha = this.state.fecha) {
+        this.setState({
+            isLoaded: false
+        });
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -41,7 +45,9 @@ class Reports extends Component {
                     downvotes: data.downvotes || "",
                     vs_upvotes: data.vs_upvotes || 0,
                     vs_downvotes: data.vs_downvotes || 0,
-                    top_five: data.top_five || []
+                    top_five: data.top_five || [],
+                    db: _db,
+                    isLoaded: true
                 });
             });
     }
@@ -63,16 +69,10 @@ class Reports extends Component {
     }
 
     changeDB(event) {
-        this.setState({
-            db: event.target.value
-        });
-        this.getData(event.target.value) // ()
+        this.getData(event.target.value)
     }
 
     changeDate(event) {
-        this.setState({
-            fecha: event.target.value
-        });
         this.getData(this.state.db, event.target.value)
     }
 
@@ -94,86 +94,91 @@ class Reports extends Component {
                         <option value="2">Cosmos DB</option>
                     </select>
                 </div>
+                {
+                    this.state.isLoaded
+                        ?
+                        <div className="reports__contairner">
 
-                <div className="reports__contairner">
-
-                    <div className="cards__container">
-                        <div className="report__card" id="card-1">
-                            <h2>NOTICIAS</h2>
-                            <p>{this.state.noticias}</p>
-                        </div>
-                        <div className="report__card" id="card-2">
-                            <h2>HASHTAGS</h2>
-                            <p>{this.state.hashtags}</p>
-                        </div>
-                        <div className="report__card" id="card-3">
-                            <h2>UPVOTES</h2>
-                            <p>{this.state.upvotes}</p>
-                        </div>
-                        <div className="report__card" id="card-4">
-                            <h2>DOWNVOTES</h2>
-                            <p>{this.state.downvotes}</p>
-                        </div>
-                    </div>
-
-                    <div className="flex__container">
-
-                        <div className="vrs__container">
-                            <div className="vrs__header">
-                                <h2>UPVOTES VS DOWNVOTES</h2>
-                                <span className="vrs__date">
-                                    <input type="date" id="fecha" name="fecha" defaultValue={this.state.fecha} onChange={(e) => { this.changeDate(e); }} />
-                                </span>
+                            <div className="cards__container">
+                                <div className="report__card" id="card-1">
+                                    <h2>NOTICIAS</h2>
+                                    <p>{this.state.noticias}</p>
+                                </div>
+                                <div className="report__card" id="card-2">
+                                    <h2>HASHTAGS</h2>
+                                    <p>{this.state.hashtags}</p>
+                                </div>
+                                <div className="report__card" id="card-3">
+                                    <h2>UPVOTES</h2>
+                                    <p>{this.state.upvotes}</p>
+                                </div>
+                                <div className="report__card" id="card-4">
+                                    <h2>DOWNVOTES</h2>
+                                    <p>{this.state.downvotes}</p>
+                                </div>
                             </div>
-                            <div className="vrs__chart">
-                                <Bars
-                                    upvotes={this.state.vs_upvotes}
-                                    downvotes={this.state.vs_downvotes}
-                                />
+
+                            <div className="flex__container">
+
+                                <div className="vrs__container">
+                                    <div className="vrs__header">
+                                        <h2>UPVOTES VS DOWNVOTES</h2>
+                                        <span className="vrs__date">
+                                            <input type="date" id="fecha" name="fecha" defaultValue={this.state.fecha} onChange={(e) => { this.changeDate(e); }} />
+                                        </span>
+                                    </div>
+                                    <div className="vrs__chart">
+                                        <Bars
+                                            upvotes={this.state.vs_upvotes}
+                                            downvotes={this.state.vs_downvotes}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="top__container">
+                                    <div className="top__header">
+                                        <h2>TOP HASHTAGS</h2>
+                                    </div>
+                                    <div className="top__chart">
+                                        <Pie
+                                            top_five={this.state.top_five}
+                                        />
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
 
-                        <div className="top__container">
-                            <div className="top__header">
-                                <h2>TOP HASHTAGS</h2>
+                            <div className="posts__container">
+                                <h2>ENTRADAS RECIENTES</h2>
+                                <div className="posts__header">
+                                    <p id="user__header">Usuario</p>
+                                    <p id="date__header">Fecha</p>
+                                    <p id="text__header">Comentario</p>
+                                    <p id="hashtags__header">Hashtags</p>
+                                </div>
+                                <div className="posts__chart">
+                                    {
+                                        this.state.posts.map((tw) => {
+                                            return <LatestNews key={this.state.db + tw.id}
+                                                username={tw.username}
+                                                date={tw.fecha}
+                                                text={tw.content}
+                                                id={tw.id}
+                                                hashtags={tw.hashtags}
+                                                db={this.state.db}
+                                            />
+                                        })
+                                    }
+                                </div>
                             </div>
-                            <div className="top__chart">
-                                <Pie
-                                    top_five={this.state.top_five}
-                                />
-                            </div>
+
                         </div>
-
-                    </div>
-
-                    <div className="posts__container">
-                        <h2>ENTRADAS RECIENTES</h2>
-                        <div className="posts__header">
-                            <p id="user__header">Usuario</p>
-                            <p id="date__header">Fecha</p>
-                            <p id="text__header">Comentario</p>
-                            <p id="hashtags__header">Hashtags</p>
+                        :
+                        <div className="gif_reports">
+                            <img src="https://quevedoes.files.wordpress.com/2019/08/img_8392.gif" id="loading_reports" alt="loading" />
                         </div>
-                        <div className="posts__chart">
-                            {
-                                this.state.posts.map((tw) => {
-                                    return <LatestNews key={this.state.db + tw.id}
-                                        username={tw.username}
-                                        date={tw.fecha}
-                                        text={tw.content}
-                                        id={tw.id}
-                                        hashtags={tw.hashtags}
-                                        db={this.state.db}
-                                    />
-                                })
-                            }
-                        </div>
-                    </div>
-
-                </div>
-
+                }
             </div>
-
         );
     }
 

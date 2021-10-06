@@ -79,8 +79,7 @@ router.post('/', async (req, res) => {
                                                     connection.query(`SELECT h.tag AS tag, c.upvotes_count AS counter
                                                     FROM HASHTAG h
                                                     INNER JOIN COMENTARIO c ON c.id = h.ID_comentario
-                                                    ORDER BY c.upvotes_count DESC
-                                                    LIMIT 5;`, function (err, result) {
+                                                    ORDER BY c.upvotes_count DESC;`, function (err, result) {
                                                         if (err) throw err;
                                                         data.top_five = result;
 
@@ -145,9 +144,7 @@ router.post('/', async (req, res) => {
             querySpec = {
                 query: `SELECT c.upvotes AS counter, h AS tag
             FROM c
-            JOIN h IN c.hashtags
-            ORDER BY c.upvotes DESC
-            OFFSET 0 LIMIT 5` }
+            JOIN h IN c.hashtags` }
             var { resources: results } = await cosmos.client.database(cosmos.databaseId).container(cosmos.containerId).items.query(querySpec).fetchAll();
             data.top_five = results;
 

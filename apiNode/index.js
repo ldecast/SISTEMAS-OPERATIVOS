@@ -1,8 +1,10 @@
+require('dotenv').config({ path: __dirname + '/.env' })
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const Router = require('./endpoints/home');
 const Admin = require('./endpoints/admin');
+const pubsub = require('./controllers/pubsub');
 
 /* init */
 const PORT = 8080;
@@ -30,6 +32,9 @@ io.on('connection', (socket) => {
         console.log(`Socket ${socket.id} disconnected`);
     });
 });
+
+/* Escuchando las notificaciones de Google PubSub */
+pubsub.pubsub();
 
 app.get('/', (req, res) => {
     res.send('GCP App Engine!');

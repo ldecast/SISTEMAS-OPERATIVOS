@@ -4,6 +4,8 @@ import Feed from "./Feed/Feed";
 import Reports from './Reports/Reports';
 import Sidebar from "./SidebarOption/Sidebar";
 import Widgets from "./Widgets/Widgets";
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 function App() {
   const [state, setState] = useState('home');
@@ -18,6 +20,9 @@ function App() {
 
   return (
     <div className="app">
+      <div className="notifications">
+        <ReactNotification />
+      </div>
       <Sidebar reports={ViewReports} feed={ViewFeed} />
       {state === 'reports'
         ? <Reports />

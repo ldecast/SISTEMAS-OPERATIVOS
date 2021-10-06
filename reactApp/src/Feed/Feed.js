@@ -4,6 +4,7 @@ import Post from "./Post";
 import TweetBox from "./TweetBox";
 import Selector from '../DBSelector/Selector';
 import socket from "../socket";
+import { store } from 'react-notifications-component';
 
 class Feed extends Component {
 
@@ -58,6 +59,37 @@ class Feed extends Component {
     socket.on('disconnect', (reason) => {
       console.log('Socket disconnected because of ' + reason);
     });
+
+    socket.on('notification', (notification) => {
+      const getObject = str => {
+        try {
+          let x = JSON.parse(str);
+          return x;
+        } catch (e) {
+          return str;
+        }
+      };
+      const obj = getObject(notification);
+      console.log("Pub/Sub Notification:", obj);
+      let content = `  Registros guardados: ${obj.guardados}
+  API: ${obj.api}
+  Tiempo de carga: ${obj.tiempoDeCarga}
+  Base de datos: ${obj.bd}`;
+      store.addNotification({
+        title: "Notificación de Google Pub/Sub",
+        message: content,
+        type: "default",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 10000,
+          onScreen: true
+        }
+      });
+    });
+
   }
 
   render() {
@@ -88,8 +120,8 @@ class Feed extends Component {
               />
             })
             :
-            <div className="gif">
-              <img src="https://quevedoes.files.wordpress.com/2019/08/img_8392.gif" id="loading" alt="loading" />
+            <div className="gif_feed">
+              <img src="https://quevedoes.files.wordpress.com/2019/08/img_8392.gif" id="loading_feed" alt="loading" />
             </div>
         }
       </div >

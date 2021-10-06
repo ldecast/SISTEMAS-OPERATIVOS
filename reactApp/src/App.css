@@ -24,3 +24,10 @@ input {
   padding: 15px;
   margin-left: 15px;
 }
+
+.notifications {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: pre-wrap;
+}

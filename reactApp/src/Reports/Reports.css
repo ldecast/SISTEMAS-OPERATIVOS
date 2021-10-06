@@ -137,6 +137,17 @@
     /* position: relative; */
 }
 
+#loading_reports {
+    height: 180px;
+    margin: auto;
+}
+
+.gif_reports {
+    display: flex;
+    margin-top: 12px;
+    min-width: 550px;
+}
+
 @media (max-width: 768px) {
     .cards__container, .flex__container {
         display: block;
