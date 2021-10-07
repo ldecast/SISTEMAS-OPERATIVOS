@@ -47,6 +47,7 @@ class Reports extends Component {
                     vs_downvotes: data.vs_downvotes || 0,
                     top_five: data.top_five || [],
                     db: _db,
+                    fecha: _fecha,
                     isLoaded: true
                 });
             });

@@ -8,14 +8,24 @@ import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 
 function App() {
-  const [state, setState] = useState('home');
+  const [state, setState] = useState({
+    estado: 'home',
+    count: 0
+  });
 
   function ViewReports() {
-    setState('reports')
+    setState({
+      estado: 'reports',
+      count: state.count + 1
+    });
   }
 
   function ViewFeed() {
-    setState('home')
+    console.log(state)
+    setState({
+      estado: 'home',
+      count: state.count + 1
+    });
   }
 
   return (
@@ -24,10 +34,10 @@ function App() {
         <ReactNotification />
       </div>
       <Sidebar reports={ViewReports} feed={ViewFeed} />
-      {state === 'reports'
-        ? <Reports />
-        : <Feed />}
-      {state === 'home' && <Widgets />}
+      {state.estado === 'reports'
+        ? <Reports key={state.count} />
+        : <Feed key={state.count} />}
+      {state.estado === 'home' && <Widgets />}
     </div>
   );
 }

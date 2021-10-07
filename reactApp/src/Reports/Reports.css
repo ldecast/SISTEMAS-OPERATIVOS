@@ -144,8 +144,8 @@
 
 .gif_reports {
     display: flex;
-    margin-top: 12px;
-    min-width: 550px;
+    min-width: 800px;
+    min-height: 700px;
 }
 
 @media (max-width: 768px) {
@@ -175,5 +175,8 @@
     }
     .reports__header {
         position: relative;
+    }
+    .gif_reports {
+        min-width: 400px;
     }
 }

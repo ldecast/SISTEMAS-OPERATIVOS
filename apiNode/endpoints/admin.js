@@ -121,7 +121,7 @@ router.post('/', async (req, res) => {
                 data.posts.push(element);
                 j++
             }
-            querySpec = { query: `SELECT COUNT(1) AS tags_count FROM c JOIN h IN c.hashtags` }
+            querySpec = { query: `SELECT COUNT(1) AS tags_count FROM (SELECT DISTINCT h FROM c JOIN h IN c.hashtags)` }
             var { resources: results } = await cosmos.client.database(cosmos.databaseId).container(cosmos.containerId).items.query(querySpec).fetchAll();
             data.hashtags = results[0].tags_count;
 

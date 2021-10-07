@@ -83,10 +83,10 @@ class Feed extends Component {
         container: "top-right",
         animationIn: ["animate__animated", "animate__fadeIn"],
         animationOut: ["animate__animated", "animate__fadeOut"],
-        dismiss: {
-          duration: 10000,
-          onScreen: true
-        }
+        // dismiss: {
+        //   duration: 15 * 1000,
+        //   onScreen: true
+        // }
       });
     });
 

@@ -27,8 +27,9 @@ async function startPubSub(
         subscription.on('message', message => {
             // console.log('Received message:', message.data.toString());
             utf8decoder = new TextDecoder('utf8');
-            // console.log(JSON.parse(utf8decoder.decode(message.data)))
-            io.emit('notification', JSON.parse(utf8decoder.decode(message.data)));
+            let notif = JSON.parse(utf8decoder.decode(message.data));
+            console.log("New notification: ", notif);
+            io.emit('notification', notif);
             message.ack();
         });
 
