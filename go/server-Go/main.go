@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -16,7 +15,6 @@ import (
 	"cloud.google.com/go/pubsub"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
 type Comentario struct {
@@ -34,6 +32,15 @@ type Notification struct {
 	Tiempo    int    `json:"tiempoDeCarga"`
 	Db        string `json:"bd"`
 }
+
+/***** VARIABLES GLOBALES *****/
+var mysql_counter = 0
+var mysql_timer = 0
+
+// var cosmos_counter = 0
+// var cosmos_timer = 0
+
+/******************************/
 
 func publish(msg Notification) error {
 	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "key.json")
@@ -60,106 +67,104 @@ func publish(msg Notification) error {
 	// ID is returned for the published message.
 	id, err := result.Get(ctx)
 	if err != nil {
-		return fmt.Errorf("Get: %v", err)
+		return err
 	}
 	fmt.Printf("Published a message; msg ID: %v\n", id)
 	return nil
 }
 
-var initiated = false
-
 func initConnection(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: iniciarCarga")
-	if initiated {
-		fmt.Println("La conexión ya ha sido iniciada.")
-	} else {
-		/* Simula el endpoint de iniciarCarga, pero realmente lo hace todo en la ruta /publicar */
-		initiated = true
-		fmt.Println("Se ha conectado a la base de datos en espera de la carga.")
-	}
+	mysql_counter = 0
+	mysql_timer = 0
+	// cosmos_counter = 0
+	// cosmos_timer = 0
+	fmt.Println("Se ha iniciado la conexión en espera de la carga.")
+	fmt.Fprintf(w, "Se ha iniciado la conexión en espera de la carga.")
 }
 
 func insertData(w http.ResponseWriter, r *http.Request) {
-	/* Publicar el Json a la bases de datos */
-	fmt.Println("Endpoint Hit: publicar")
-
 	db, err := sql.Open("mysql", "root:123456789@tcp(34.122.20.143)/MYSQLDB")
 	if err != nil {
 		panic(err.Error())
 	}
-	var b bytes.Buffer
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	b.Write(reqBody)
-	// fmt.Println(b.String())
-	var tmp []Comentario
-	json.Unmarshal(b.Bytes(), &tmp)
+	defer db.Close()
 
-	counter := 0
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	// var b bytes.Buffer
+	// b.Write(reqBody)
+	// fmt.Println(b.String())
+	var post Comentario
+	json.Unmarshal(reqBody, &post)
+	// fmt.Println(post)
+
 	start := time.Now()
-	for i := 0; i < len(tmp); i++ {
-		post := tmp[i]
-		db.Exec(`INSERT INTO COMENTARIO (username, content, upvoted, upvotes_count, downvoted, downvotes_count, fecha, avatar)
-		VALUES ("` + tmp[i].Nombre + `", "` + post.Comentario + `", 0, ` + strconv.Itoa(post.Upvotes) +
-			`, 0, ` + strconv.Itoa(post.Downvotes) + `, "` + post.Fecha + `", "");`)
-		// Obtener el id del último comentario ingresado
-		var id int
-		last_row := db.QueryRow(`SELECT id
+	db.Exec(`INSERT INTO COMENTARIO (username, content, upvoted, upvotes_count, downvoted, downvotes_count, fecha, avatar)
+	VALUES ("` + post.Nombre + `", "` + post.Comentario + `", 0, ` + strconv.Itoa(post.Upvotes) +
+		`, 0, ` + strconv.Itoa(post.Downvotes) + `, "` + post.Fecha + `", "");`)
+	// Obtener el id del último comentario ingresado
+	var id int
+	last_row := db.QueryRow(`SELECT id
 		FROM COMENTARIO
 		ORDER BY id DESC
 		LIMIT 1;`)
 
-		err := last_row.Scan(&id)
-		if err != nil {
-			panic(err)
-		}
+	exc := last_row.Scan(&id)
+	if exc != nil {
+		panic(exc)
+	}
 
-		for j := 0; j < len(post.Hashtags); j++ {
-			hashtag := post.Hashtags[j]
-			db.Exec(`INSERT INTO HASHTAG (tag, ID_comentario)
+	for i := 0; i < len(post.Hashtags); i++ {
+		hashtag := post.Hashtags[i]
+		db.Exec(`INSERT INTO HASHTAG (tag, ID_comentario)
 		    VALUES ("` + hashtag + `", ` + strconv.Itoa(id) + `);`)
-		}
-		// increment our counter variable
-		counter++
 	}
-	timer_mysql := int(time.Since(start).Seconds())
-	fmt.Println("Se han cargado los datos a la base de datos.")
-
-	/* Cerrar la conexión a las bases de datos y mandar notificación a Google PubSub */
-	db.Close()
-	var notif Notification
-	notif.Api = "Golang"
-	notif.Db = "CloudSQL"
-	notif.Guardados = counter
-	notif.Tiempo = timer_mysql
-	// Response notification
-	err = publish(notif)
-	if err != nil {
-		fmt.Printf("Error publishing message")
-	}
-	json.NewEncoder(w).Encode(notif)
+	// increment our global variables
+	mysql_counter++
+	mysql_timer += int(time.Since(start).Seconds())
+	fmt.Fprintf(w, "Se ha insertado un registro desde Cloud Run - Go Api.")
 }
 
 func endConnection(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: finalizarCarga")
-	if initiated {
-		/* Simula el endpoint de finalizarCarga, pero realmente lo hace todo en la ruta /publicar */
-		initiated = false
-		fmt.Println("La conexión se ha finalizado y se ha enviado una notificación a Google PubSub.")
-	} else {
-		fmt.Println("No se encuentra ninguna conexión iniciada.")
+	var notif Notification
+	notif.Api = "Golang"
+	notif.Db = "CloudSQL"
+	notif.Guardados = mysql_counter
+	notif.Tiempo = mysql_timer
+	err := publish(notif)
+	if err != nil {
+		fmt.Printf("Error publishing message")
 	}
+	fmt.Println("La conexión se ha finalizado y se ha enviado una notificación a Google PubSub.")
+	fmt.Fprintf(w, "La conexión se ha finalizado y se ha enviado una notificación a Google PubSub.")
 }
 
-func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) { fmt.Println("Hi from GO server!") })
-	myRouter.HandleFunc("/iniciarCarga", initConnection)
-	myRouter.HandleFunc("/endpoint/go", insertData).Methods("POST")
-	myRouter.HandleFunc("/finalizarCarga", endConnection)
-	log.Fatal(http.ListenAndServe(":10000", myRouter))
+func sayHi(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello from Go server in Cloud Function!")
+}
+
+func Funcion(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, r.URL.Path)
 }
 
 func main() {
-	fmt.Println("Go server listening on port: 10000")
-	handleRequests()
+	http.HandleFunc("/", sayHi)
+
+	http.HandleFunc("/iniciarCarga", initConnection)
+	http.HandleFunc("/publicar_go", insertData)
+	http.HandleFunc("/endpoint/go", insertData)
+	http.HandleFunc("/finalizarCarga", endConnection)
+
+	// Determine port for HTTP service.
+	// os.Setenv("PORT", "10000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "10000"
+		log.Printf("defaulting to port %s", port)
+	}
+
+	// Start HTTP server.
+	log.Printf("Go server listening on port: %s", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatal(err)
+	}
 }
