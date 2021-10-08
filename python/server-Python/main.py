@@ -66,13 +66,13 @@ def iniciarCarga():
     mysql_counter = 0
 
     global mysql_timer
-    mysql_timer = 0
+    mysql_timer = time.time()
 
     global cosmos_counter
     cosmos_counter = 0
 
     global cosmos_timer
-    cosmos_timer = 0
+    cosmos_timer = time.time()
     print("Carga iniciada.")
     return "Conexión iniciada exitosamente en espera de los datos."
 
@@ -80,20 +80,22 @@ def iniciarCarga():
 @app.route('/finalizarCarga', methods=['GET', 'POST'])
 def finalizarCarga():
     """ Enviar notificaciones al Pub/Sub """
-    notification = {
-        "guardados": mysql_counter,
-        "api": "Python",
-        "tiempoDeCarga": mysql_timer,
-        "bd": "CloudSQL"
-    }
-    pub(json.dumps(notification))
-    notification = {
-        "guardados": cosmos_counter,
-        "api": "Python",
-        "tiempoDeCarga": cosmos_timer,
-        "bd": "CosmosDB"
-    }
-    pub(json.dumps(notification))
+    if mysql_counter > 0:
+        notification = {
+            "guardados": mysql_counter,
+            "api": "Python",
+            "tiempoDeCarga": mysql_timer,
+            "bd": "CloudSQL"
+        }
+        pub(json.dumps(notification))
+    if cosmos_counter > 0:
+        notification = {
+            "guardados": cosmos_counter,
+            "api": "Python",
+            "tiempoDeCarga": cosmos_timer,
+            "bd": "CosmosDB"
+        }
+        pub(json.dumps(notification))
     print("Carga finalizada.\n")
     return "Conexión finalizada exitosamente."
 
@@ -103,7 +105,7 @@ def finalizarCarga():
 @app.route('/publicar_python', methods=['POST'])  # GENERAL
 def publicar():
     """ Insertar registro """
-    body = request.get_json()  # .get_json() si se mandara un json
+    body = request.get_json()
     # print('BODY=', body)
     insertToCosmos(body)
     insertToMySQL(body)
@@ -120,7 +122,8 @@ def insertToMySQL(post):
         )
         cursor = mydb.cursor()
         # post = json.loads(jsonArray)
-        start = time.time()
+        global mysql_timer
+        start = mysql_timer
         # for post in posts:
         query = """INSERT INTO COMENTARIO (username, content, upvoted, upvotes_count, downvoted, downvotes_count, fecha, avatar)
         VALUES ("{0}", "{1}", {2}, {3}, {4}, {5}, "{6}", "{7}")""".format(post["nombre"], post["comentario"], 0,
@@ -145,9 +148,8 @@ def insertToMySQL(post):
         cursor.close()
         mydb.close()
 
-        global mysql_timer
         end = time.time()
-        mysql_timer += int(end-start)
+        mysql_timer += int((end-start) % 60)
         # print("Se ha insertado correctamente a la base de MySQL")
         return "ok"
     except Exception as e:
@@ -159,7 +161,8 @@ def insertToCosmos(post):
     client = cosmos_client.CosmosClient(
         HOST_COSMOS, {'masterKey': MASTER_KEY_COSMOS})
     try:
-        start = time.time()
+        global cosmos_timer
+        start = cosmos_timer
         db = client.get_database_client(DATABASE_ID_COSMOS)
         container = db.get_container_client(CONTAINER_ID_COSMOS)
         # post = json.loads(jsonArray)
@@ -174,9 +177,8 @@ def insertToCosmos(post):
     finally:
         global cosmos_counter
         cosmos_counter += 1
-        global cosmos_timer
         end = time.time()
-        cosmos_timer += int(end-start)
+        cosmos_timer += int((end-start) % 60)
         # print("Se ha insertado correctamente a la base de CosmosDB")
         return "ok"
 
